@@ -53,11 +53,20 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/restrito', (req, res) => {
-   const listaAcessos = req.cookies.historicoAcessos;
+   const listaAcessos = req.cookies.historicoAcessos || [];
    const ultimoAcesso = listaAcessos[listaAcessos.length -1];
    const paginaHTML = fs.readFileSync(__dirname + '/restrito.html', 'utf-8');
    const nomeUser = req.cookies.usuarioLogado;
-   const htmlModificado = paginaHTML.replace('{{NOME_USUARIO}}', nomeUser);
+   
+
+   let linhasAcessos = "";
+   listaAcessos.forEach(linha => {
+    linhasAcessos = linhasAcessos + `<tr><td>${linha}</td></tr>`;
+   });
+
+   const htmlModificado = paginaHTML.replace('{{NOME_USUARIO}}', nomeUser) .replace('{{ULTIMO_ACESSO}}', ultimoAcesso) .replace('{{LINHAS_TABELA}}', linhasAcessos);
+
+   res.send(htmlModificado);
 });
 
 app.listen(PORT, () => {
