@@ -61,9 +61,11 @@ app.post('/login', (req, res) => {
             res.cookie('sessaoExpirada', 'sessao');
         }
 
-        const navegador = req.headers['user-agent']
-        const dataLogin = new Date()
-        const novoAcesso = `Login feito em ${dataLogin} usando ${navegador}`;
+       const dataFormatada = new Date().toLocaleString('pt-BR');
+       const novoAcesso = {
+        data: dataFormatada,
+        agente: req.headers['user-agent']
+       };
 
         if (!historicoAcessos[loginDigitado]) {
             historicoAcessos[loginDigitado] = [];
@@ -108,7 +110,7 @@ app.get('/restrito', (req, res) => {
     const listaAcessos = historicoAcessos[nomeUser] || [];
 
     const ultimoAcesso = listaAcessos.length > 0
-        ? listaAcessos[listaAcessos.length - 1]
+        ? `Em ${listaAcessos[listaAcessos.length -1].data}`
         : 'Nenhum acesso registrado';
 
     let sessaoExpirada;
@@ -132,8 +134,11 @@ app.get('/restrito', (req, res) => {
 
     let linhasAcessos = "";
 
-    listaAcessos.forEach(linha => {
-        linhasAcessos += `<tr><td>${linha}</td></tr>`;
+    listaAcessos.forEach(acesso => {
+        linhasAcessos += `<tr>
+            <td>${acesso.data}</td>
+            <td><small>${acesso.agente}</small></td>
+        </tr>`;
     });
 
     const htmlModificado = paginaHTML

@@ -13,17 +13,18 @@
     <p>Sua sessão é válida até {{SESSAO_EXPIRADA}}</p>
     <hr>
     <h2>Histórico de acessos</h2>
-    <table>
+    <table border="1">
         <thead>
             <tr>
-                <th>Detalhes do Acesso</th>
+                <th>Data e Hora</th>
+                <th>Navegador</th>
             </tr>
         </thead>
         <tbody>
             {{LINHAS_TABELA}}
         </tbody>
     </table>
-
+    <br>
     <form action="/logout" method="GET">
         <button type="submit">Logout</button>
     </form>
