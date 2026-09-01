@@ -53,9 +53,12 @@ app.post('/login', (req, res) => {
 
             res.cookie('usuarioLogado', loginDigitado, {
                 maxAge: tresDias
-
             });
+            
+            res.cookie('sessaoExpirada', dataExpiracao.toISOString(), {maxAge: tresDias});
 
+        } else {
+            res.cookie('sessaoExpirada', 'sessao');
         }
 
         const navegador = req.headers['user-agent']
@@ -80,6 +83,10 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/restrito', (req, res) => {
+
+    if(!req.cookies.usuarioLogado){
+       return res.redirect('/')
+    }
 
     const nomeUser = req.cookies.usuarioLogado;
 
